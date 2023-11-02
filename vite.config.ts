@@ -1,6 +1,6 @@
 export default {
   // Set the root directory of your app
-  root: './src',
+  root: './',
 
   // Set the output directory for the built files
   build: {
