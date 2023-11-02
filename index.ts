@@ -28,7 +28,7 @@ export class User {
   private _peer: Peer | undefined;
   private _stream: MediaStream | undefined;
 
-  constructor(public userId: string, public useOwnMedia: boolean = true) {
+  constructor(public userId: string, public useOwnMedia: boolean = false) {
     this._peer = connectToPeerJSServer(userId);
     this.getUserMedia();
     this.listenToCall();
@@ -45,17 +45,20 @@ export class User {
 
   handleCall = async (call: MediaConnection) => {
     try {
-      call.answer();
+      call.answer(this._stream);
+      console.log('*** "answer" event sent', this._stream, call)
 
       const canvas = document.createElement('canvas');
       canvas.width = 640;
       canvas.height = 480;
       document.body.appendChild(canvas);
+      
+      if (this._stream) renderVideoStream(this._stream, canvas);
 
-      call.on("stream", () => {
-        console.log('*** "stream" event received, calling renderVideoStream(userVideoStream, canvas)');
-        renderVideoStream(call.remoteStream, canvas);
-      });
+      // call.on("stream", (userVideoStream) => {
+      //   console.log('*** "stream" event received, calling renderVideoStream(userVideoStream, canvas)');
+      //   renderVideoStream(userVideoStream, canvas);
+      // });
     } catch (err) {
       console.error('*** ERROR during call handling: ' + err);
     }
