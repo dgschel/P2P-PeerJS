@@ -43,25 +43,8 @@ export class User {
     this._peer?.on('call', this.handleCall);
   }
 
-  handleCall = async (call: MediaConnection) => {
-    try {
-      call.answer(this._stream);
-
-      const canvas = document.createElement('canvas');
-      canvas.width = 640;
-      canvas.height = 480;
-      document.body.appendChild(canvas);
-
-      if (this._stream) renderVideoStream(this._stream, canvas);
-
-      call.on("stream", (userVideoStream) => {
-        console.log('*** "stream" event received, calling renderVideoStream(userVideoStream, canvas)');
-        renderVideoStream(userVideoStream, canvas);
-      });
-
-    } catch (err) {
-      console.error('*** ERROR during call handling: ' + err);
-    }
+  handleCall = (call: MediaConnection) => {
+    call.answer(this._stream);
   }
 
   getPeer = (): Peer | undefined => this._peer;
@@ -85,15 +68,21 @@ export const connectToPeerJSServer = (userId: string): Peer => {
   return peer;
 }
 
-export const makeCall = (user: User, userId: string) => {
-  const peer = user.getPeer();
-  const stream = user.getStream();
+export const makeCall = async (currentUser: User, remoteUserId: string) => {
+  const peer = currentUser.getPeer();
+  const stream = currentUser.getStream();
 
-  if (peer && stream) peer.call(peer.id, stream);
+  if (peer && stream) {
+    const caller = peer.call(remoteUserId, stream);
+    caller.answer(stream);
+    const canvas = document.createElement('canvas');
+    canvas.width = 640;
+    canvas.height = 480;
+    document.body.appendChild(canvas);
+    caller.on('stream', (userVideoStream) => {
+      renderVideoStream(userVideoStream, canvas);
+    });
+  }
 }
 
-
-
-
 export const getUserMediaConstraints = (): MediaStreamConstraints => ({ video: true, audio: true });
-
