@@ -9,51 +9,32 @@
 <body>
   <input type="text" name="user-id" id="user-id">
   <button id="create-user-peer">create user</button>
+  <input type="checkbox" name="ownMedia" id="ownMedia">
   <hr />
-  <input type="text" name="connect-to-user" id="connect-to-user">
   <button id="connect-user-peer">connect user</button>
   <hr />
 </body>
 
-<script type="module" crossorigin="">
+<script type="module" crossorigin="anonymous">
   import { User, makeCall } from './index.ts';
 
   const createUserPeerButton = document.getElementById('create-user-peer');
+  const ownMediaCheckbox = document.getElementById('ownMedia');
   const connectToUserPeerButton = document.getElementById('connect-user-peer');
 
   let currentUser = null;
 
   createUserPeerButton.addEventListener('click', () => {
     const userId = document.getElementById('user-id').value;
-    currentUser = new User(userId);
-    { {/*  users.push(user);  */ } }
+    currentUser = new User(userId, ownMediaCheckbox.checked);
   });
 
   connectToUserPeerButton.addEventListener('click', () => {
     const remoteUserID = prompt('Enter user id');
-    if (!remoteUserID && remoteUserID.length === 0) return;
-
-    {
-      {/*  
-    const user = findUser(users, userId);
-    if (!user) throw new Error('User not found');  */}
-    }
+    if (!remoteUserID) return;
 
     makeCall(currentUser, remoteUserID);
   });
-
-  {
-    {/*  connectToUserPeerButton.addEventListener('click', () => {
-    const userId = document.getElementById('connect-to-user').value;
-    if (!userId && userId.length === 0) return;
-
-    const user = findUser(users, userId);
-
-    if (!user) throw new Error('User not found');
-
-    connectToUser(user);
-  });  */}
-  }
 </script>
 
 

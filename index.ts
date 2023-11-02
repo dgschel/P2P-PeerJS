@@ -28,13 +28,14 @@ export class User {
   private _peer: Peer | undefined;
   private _stream: MediaStream | undefined;
 
-  constructor(public userId: string) {
+  constructor(public userId: string, public useOwnMedia: boolean = true) {
     this._peer = connectToPeerJSServer(userId);
     this.getUserMedia();
     this.listenToCall();
   }
 
   getUserMedia = async () => {
+    if (!this.useOwnMedia) return;
     this._stream = await navigator.mediaDevices.getUserMedia(getUserMediaConstraints());
   }
 
@@ -44,7 +45,7 @@ export class User {
 
   handleCall = async (call: MediaConnection) => {
     try {
-      call.answer(this._stream);
+      call.answer();
 
       const canvas = document.createElement('canvas');
       canvas.width = 640;
@@ -84,42 +85,9 @@ export const connectToPeerJSServer = (userId: string): Peer => {
 export const makeCall = (user: User, userId: string) => {
   const peer = user.getPeer();
   const stream = user.getStream();
-  
+
   if (peer && stream) peer.call(userId, stream);
 }
 
-// export const connectToUser = (user: User) => {
-//   const peer = user.getPeer();
-//   const stream = user.getStream();
-
-//   if (!peer) throw new Error('PeerJS-Server nicht verbunden');
-//   if (!stream) throw new Error('Stream nicht verfügbar');
-
-//   const call = peer.call(user.userId, stream);
-//   call.on('stream', (stream: MediaStream) => { });
-//   peer.on('call', (call: MediaConnection) => {
-//     console.log('received call')
-//     // call.answer(stream)
-//     renderVideoStream(stream);
-//   });
-//   // handleCall(call);
-// }
-
-export const handleCall = (call: MediaConnection) => {
-  call.answer(); // Anruf annehmen
-  call.on('stream', (stream: MediaStream) => {
-    console.log('received stream')
-    // Hier empfangen Sie den Videostream und den Audiostream.
-    // renderVideoStream(stream);
-  });
-
-  // Optional: Wenn der Anruf beendet wird, können Sie Aktionen ausführen.
-  call.on('close', () => {
-    // Anruf wurde beendet
-  });
-}
-
-export const getUserMediaConstraints = (): MediaStreamConstraints => {
-  return { video: true, audio: true };
-}
+export const getUserMediaConstraints = (): MediaStreamConstraints => ({ video: true, audio: true });
 
