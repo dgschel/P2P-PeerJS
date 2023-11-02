@@ -45,16 +45,16 @@ export class User {
 
   handleCall = async (call: MediaConnection) => {
     try {
-      call.answer(this._stream);
+      call.answer();
 
       const canvas = document.createElement('canvas');
       canvas.width = 640;
       canvas.height = 480;
       document.body.appendChild(canvas);
 
-      call.on("stream", (userVideoStream) => {
+      call.on("stream", () => {
         console.log('*** "stream" event received, calling renderVideoStream(userVideoStream, canvas)');
-        renderVideoStream(userVideoStream, canvas);
+        renderVideoStream(call.remoteStream, canvas);
       });
     } catch (err) {
       console.error('*** ERROR during call handling: ' + err);
