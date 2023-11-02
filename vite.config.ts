@@ -1,10 +1,13 @@
-export default {
+import { defineConfig } from 'vite'
+
+export default defineConfig({
   // Set the root directory of your app
   root: './',
+  base: "./",
 
   // Set the output directory for the built files
   build: {
-    outDir: '../dist',
+    outDir: './dist',
   },
 
   // Set up any plugins you want to use
@@ -14,4 +17,4 @@ export default {
   server: {
     port: 3000,
   },
-};
+});

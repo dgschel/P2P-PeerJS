@@ -82,7 +82,9 @@ export const connectToPeerJSServer = (userId: string): Peer => {
 }
 
 export const makeCall = (user: User, userId: string) => {
-  const [peer, stream] = [user.getPeer(), user.getStream()];
+  const peer = user.getPeer();
+  const stream = user.getStream();
+  
   if (peer && stream) peer.call(userId, stream);
 }
 
