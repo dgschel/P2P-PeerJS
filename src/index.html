@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <title>Canvas Example</title>
+  <script type="module" src="index.ts"></script>
+</head>
+
+<body>
+  <input type="text" name="user-id" id="user-id">
+  <button id="create-user-peer">create user</button>
+  <hr />
+  <input type="text" name="connect-to-user" id="connect-to-user">
+  <button id="connect-user-peer">connect user</button>
+  <hr />
+</body>
+
+<script type="module">
+  import { User, makeCall } from './index.ts';
+
+  const createUserPeerButton = document.getElementById('create-user-peer');
+  const connectToUserPeerButton = document.getElementById('connect-user-peer');
+
+  let currentUser = null;
+
+  createUserPeerButton.addEventListener('click', () => {
+    const userId = document.getElementById('user-id').value;
+    currentUser = new User(userId);
+    { {/*  users.push(user);  */ } }
+  });
+
+  connectToUserPeerButton.addEventListener('click', () => {
+    const remoteUserID = prompt('Enter user id');
+    if (!remoteUserID && remoteUserID.length === 0) return;
+
+    {
+      {/*  
+    const user = findUser(users, userId);
+    if (!user) throw new Error('User not found');  */}
+    }
+
+    makeCall(currentUser, remoteUserID);
+  });
+
+  {
+    {/*  connectToUserPeerButton.addEventListener('click', () => {
+    const userId = document.getElementById('connect-to-user').value;
+    if (!userId && userId.length === 0) return;
+
+    const user = findUser(users, userId);
+
+    if (!user) throw new Error('User not found');
+
+    connectToUser(user);
+  });  */}
+  }
+</script>
+
+
+</html>
