@@ -46,19 +46,19 @@ export class User {
   handleCall = async (call: MediaConnection) => {
     try {
       call.answer(this._stream);
-      console.log('*** "answer" event sent', this._stream, call)
 
       const canvas = document.createElement('canvas');
       canvas.width = 640;
       canvas.height = 480;
       document.body.appendChild(canvas);
-      
+
       if (this._stream) renderVideoStream(this._stream, canvas);
 
-      // call.on("stream", (userVideoStream) => {
-      //   console.log('*** "stream" event received, calling renderVideoStream(userVideoStream, canvas)');
-      //   renderVideoStream(userVideoStream, canvas);
-      // });
+      call.on("stream", (userVideoStream) => {
+        console.log('*** "stream" event received, calling renderVideoStream(userVideoStream, canvas)');
+        renderVideoStream(userVideoStream, canvas);
+      });
+
     } catch (err) {
       console.error('*** ERROR during call handling: ' + err);
     }
@@ -89,8 +89,11 @@ export const makeCall = (user: User, userId: string) => {
   const peer = user.getPeer();
   const stream = user.getStream();
 
-  if (peer && stream) peer.call(userId, stream);
+  if (peer && stream) peer.call(peer.id, stream);
 }
+
+
+
 
 export const getUserMediaConstraints = (): MediaStreamConstraints => ({ video: true, audio: true });
 
