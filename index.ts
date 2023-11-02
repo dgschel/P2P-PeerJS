@@ -45,7 +45,7 @@ export class User {
 
   handleCall = async (call: MediaConnection) => {
     try {
-      call.answer();
+      call.answer(this._stream);
 
       const canvas = document.createElement('canvas');
       canvas.width = 640;
