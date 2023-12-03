@@ -43,6 +43,23 @@ export class User {
     call.answer(this._stream);
   }
 
+  sendOwnMediaStream = (remoteUserId: string) => {
+    const peer = this.getPeer();
+    const stream = this.getStream();
+
+    if (peer && stream) {
+      const caller = peer.call(remoteUserId, stream);
+      caller.answer(stream);
+      const canvas = document.createElement('canvas');
+      canvas.width = 640;
+      canvas.height = 480;
+      document.body.appendChild(canvas);
+      caller.on('stream', (userVideoStream) => {
+        renderVideoStream(userVideoStream, canvas);
+      });
+    }
+  }
+
   getPeer = (): Peer | undefined => this._peer;
   getStream = (): MediaStream | undefined => this._stream;
 }
@@ -65,20 +82,7 @@ export const connectToPeerJSServer = (userId: string): Peer => {
 }
 
 export const makeCall = async (currentUser: User, remoteUserId: string) => {
-  const peer = currentUser.getPeer();
-  const stream = currentUser.getStream();
-
-  if (peer && stream) {
-    const caller = peer.call(remoteUserId, stream);
-    caller.answer(stream);
-    const canvas = document.createElement('canvas');
-    canvas.width = 640;
-    canvas.height = 480;
-    document.body.appendChild(canvas);
-    caller.on('stream', (userVideoStream) => {
-      renderVideoStream(userVideoStream, canvas);
-    });
-  }
+  currentUser.sendOwnMediaStream(remoteUserId);
 }
 
 export const getUserMediaConstraints = (): MediaStreamConstraints => ({ video: true, audio: true });

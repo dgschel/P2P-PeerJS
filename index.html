@@ -27,7 +27,7 @@
 
   createUserPeerButton.addEventListener('click', () => {
     const userId = document.getElementById('user-id').value;
-    currentUser = new User(userId, true);
+    currentUser = new User(userId, ownMediaCheckbox.checked);
   });
 
   connectToUserPeerButton.addEventListener('click', () => {
