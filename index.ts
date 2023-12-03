@@ -41,6 +41,13 @@ export class User {
 
   handleCall = (call: MediaConnection) => {
     call.answer(this._stream);
+    const canvas = createCanvasElement(640, 480);
+
+    if (this._stream) renderVideoStream(this._stream, canvas);
+
+    call.on("stream", (userVideoStream) => {
+      renderVideoStream(userVideoStream, canvas);
+    });
   }
 
   sendOwnMediaStream = (remoteUserId: string) => {
@@ -50,20 +57,10 @@ export class User {
     if (peer && stream) {
       const caller = peer.call(remoteUserId, stream);
       caller.answer(stream);
-      const canvas = document.createElement('canvas');
-      canvas.width = 640;
-      canvas.height = 480;
-      document.body.appendChild(canvas);
+      const canvas = createCanvasElement(640, 480);
       caller.on('stream', (userVideoStream) => {
         renderVideoStream(userVideoStream, canvas);
       });
-      
-      const canvas2 = document.createElement('canvas');
-      canvas.width = 640;
-      canvas.height = 480;
-      document.body.appendChild(canvas2);
-      
-      renderVideoStream(stream, canvas2);
     }
   }
 
@@ -72,6 +69,14 @@ export class User {
 }
 
 export const findUser = (users: User[], userId: string): User | undefined => users.find((user) => user.userId === userId)
+
+export function createCanvasElement(width: number, height: number): HTMLCanvasElement {
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+  document.body.appendChild(canvas);
+  return canvas;
+}
 
 export const connectToPeerJSServer = (userId: string): Peer => {
   const peer = new Peer(userId, {
