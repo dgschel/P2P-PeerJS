@@ -57,6 +57,13 @@ export class User {
       caller.on('stream', (userVideoStream) => {
         renderVideoStream(userVideoStream, canvas);
       });
+      
+      const canvas2 = document.createElement('canvas');
+      canvas.width = 640;
+      canvas.height = 480;
+      document.body.appendChild(canvas2);
+      
+      renderVideoStream(stream, canvas2);
     }
   }
 
