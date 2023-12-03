@@ -2,7 +2,7 @@
 <html lang="de">
 
 <head>
-  <title>Canvas Example</title>
+  <title>PeerJS Example</title>
   <script type="module" crossorigin src="index.ts"></script>
 </head>
 
@@ -27,7 +27,7 @@
 
   createUserPeerButton.addEventListener('click', () => {
     const userId = document.getElementById('user-id').value;
-    currentUser = new User(userId, ownMediaCheckbox.checked);
+    currentUser = new User(userId, true);
   });
 
   connectToUserPeerButton.addEventListener('click', () => {

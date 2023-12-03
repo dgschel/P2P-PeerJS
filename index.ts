@@ -5,14 +5,10 @@ export function renderVideoStream(stream: MediaStream, canvas: HTMLCanvasElement
   videoElement.srcObject = stream;
   videoElement.onloadedmetadata = () => {
     videoElement.play();
-    // Stellen Sie sicher, dass das Canvas die gleiche Größe wie das Video hat.
     canvas.width = videoElement.videoWidth;
     canvas.height = videoElement.videoHeight;
-
-    // Fügen Sie das Video-Element als Kind zum Canvas hinzu
     canvas.appendChild(videoElement);
 
-    // Zeichnen Sie das Video auf das Canvas.
     const ctx = canvas.getContext('2d');
     if (ctx) {
       const drawVideoFrame = () => {
